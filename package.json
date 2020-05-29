@@ -1,0 +1,24 @@
+{
+  "name": "media",
+  "version": "1.0.0",
+  "description": "SHKIT media portal back-end",
+  "main": "index.js",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "dotenv": "^8.2.0",
+    "fastify": "^2.14.1",
+    "fastify-cors": "^3.0.3",
+    "fastify-jwt": "^1.4.0",
+    "mongoose": "^5.9.14",
+    "rollbar": "^2.16.2"
+  },
+  "devDependencies": {
+    "fastify-plugin": "^1.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "author": "Markizzio",
+  "license": "ISC"
+}
