@@ -1,8 +1,11 @@
 <component name="ProjectDictionaryState">
   <dictionary name="markz">
     <words>
+      <w>bcrypt</w>
       <w>fastify</w>
       <w>rollbar</w>
+      <w>sequelize</w>
+      <w>spki</w>
       <w>supersecret</w>
     </words>
   </dictionary>

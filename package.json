@@ -8,16 +8,19 @@
     "dotenv": "^8.2.0",
     "fastify": "^2.14.1",
     "fastify-cors": "^3.0.3",
+    "fastify-helmet": "^3.0.2",
     "fastify-jwt": "^1.4.0",
-    "mongoose": "^5.9.14",
-    "rollbar": "^2.16.2"
+    "mysql2": "^2.1.0",
+    "rollbar": "^2.16.2",
+    "sequelize": "^5.21.11"
   },
   "devDependencies": {
     "fastify-plugin": "^1.6.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "certs:generate": "node scripts/generateKeys.js"
   },
   "author": "Markizzio",
   "license": "ISC"

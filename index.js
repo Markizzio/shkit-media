@@ -10,6 +10,8 @@ fastify.register(require('./plugins/rollbar'), {
     captureUncaught: process.env.RB_CAPTURE_UNCAUGHT,
     captureUnhandledRejections: process.env.RB_CAPTURE_UNHANDLED_REJECTIONS
 });
+fastify.register(require('./plugins/jwt'));
+fastify.register(require('fastify-helmet'));
 
 const components = fs.readdirSync(path.join(__dirname, 'components'));
 components.forEach(component => {
@@ -18,12 +20,6 @@ components.forEach(component => {
         fastify.register(require(`./components/${component}/api.js`), { prefix: '/api' })
     }
 });
-
-const decorators = fs.readdirSync(path.join(__dirname, 'decorators'));
-decorators.forEach(decorator => {
-    fastify.register(require(`./decorators/${decorator}`))
-});
-
 
 fastify.addHook('onRequest', async (request, reply) => {
     fastify.rollbar.info(request);

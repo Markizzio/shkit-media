@@ -1,3 +1,5 @@
+const controller = require('./controller');
+
 module.exports = function (fastify, opts, done) {
 
     fastify.route({
@@ -10,20 +12,22 @@ module.exports = function (fastify, opts, done) {
                 },
                 password: {
                     type: "string"
+                },
+                fingerprint: {
+                    type: 'string'
                 }
             },
             response: {
                 200: {
                     type: 'object',
-                    properties: {
-                        hello: {type: 'string'}
+                    data: {
+                        status: {type: 'string'},
+                        token: {type: 'string'}
                     }
                 }
             }
         },
-        handler: function (request, reply) {
-            reply.send({hello: 'world'})
-        }
+        handler: (request, reply) => controller.auth(fastify, request, reply)
     });
 
     fastify.route({
