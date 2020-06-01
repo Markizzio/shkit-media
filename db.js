@@ -18,6 +18,8 @@ sequelize
     })
     .catch(err => {
         console.error('Unable to connect to the database:', err);
-    });
+    }).finally(() => {
+    sequelize.close();
+});
 
 module.exports = sequelize;

@@ -9,7 +9,7 @@ const User = require('./model');
  * @param fastify - глобальный объект fastify
  * @param request - объект запроса
  * @param reply - объект ответа
- * @returns {Promise<void>}
+ * @returns {Promise<void>} - токен или сообщение о неудаче
  */
 async function auth(fastify, request, reply) {
 
