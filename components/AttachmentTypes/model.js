@@ -1,10 +1,10 @@
 const sequelize = require('../../db');
-const {Model, DataTypes} = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 
-class Post extends Model {
+class AttachmentType extends Model{
 }
 
-Post.init({
+AttachmentType.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -16,16 +16,20 @@ Post.init({
         allowNull: false
     },
     description: {
-        type: DataTypes.STRING(600),
+        type: DataTypes.STRING,
         allowNull: false
     },
-    content: {
-        type: DataTypes.TEXT,
+    mime_type: {
+        type: DataTypes.STRING,
         allowNull: false
-    }
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
 }, {
     sequelize,
-    modelName: "Post"
+    modelName: "Attachment_Type"
 });
 
-module.exports = {Post};
+module.exports = { AttachmentType };

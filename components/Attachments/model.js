@@ -1,31 +1,23 @@
 const sequelize = require('../../db');
 const {Model, DataTypes} = require('sequelize');
 
-class Post extends Model {
+class Attachment extends Model{
 }
 
-Post.init({
+Attachment.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false
     },
-    title: {
+    path: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING(600),
-        allowNull: false
-    },
-    content: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    }
 }, {
     sequelize,
-    modelName: "Post"
+    modelName: "Attachment"
 });
 
-module.exports = {Post};
+module.exports = { Attachment };

@@ -12,14 +12,7 @@ fastify.register(require('./plugins/rollbar'), {
 });
 fastify.register(require('./plugins/jwt'));
 fastify.register(require('fastify-helmet'));
-
-const components = fs.readdirSync(path.join(__dirname, 'components'));
-components.forEach(component => {
-    const dir = fs.readdirSync(path.join(__dirname, `components/${component}`));
-    if (dir.includes('api.js')) {
-        fastify.register(require(`./components/${component}/api.js`), { prefix: '/api' })
-    }
-});
+fastify.register(require('./components/index'));
 
 fastify.addHook('onRequest', async (request, reply) => {
     fastify.rollbar.info(request);

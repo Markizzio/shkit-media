@@ -20,7 +20,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "certs:generate": "node scripts/generateKeys.js"
+    "certs:generate": "node scripts/generateKeys.js",
+    "db:fresh": "node scripts/dbFresh.js",
+    "db:sample": "node scripts/db/sample.js"
   },
   "author": "Markizzio",
   "license": "ISC"

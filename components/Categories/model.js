@@ -1,7 +1,26 @@
-const mongoose = require('mongoose');
+const sequelize = require('../../db');
+const { Model, DataTypes } = require('sequelize');
 
-const schema = mongoose.Schema({});
+class Category extends Model {}
 
-const model = mongoose.Model(schema);
+Category.init({
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    title: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    description: {
+        type: DataTypes.STRING(600),
+        allowNull: false
+    }
+}, {
+    sequelize,
+    modelName: "Category"
+});
 
-module.exports = model;
+module.exports = { Category };

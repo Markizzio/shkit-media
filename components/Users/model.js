@@ -1,39 +1,66 @@
 const sequelize = require('../../db');
-const Sequelize = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 
-sequelize.define("User", {
+class User extends Model {}
+
+User.init({
     id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false
     },
     name: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     surname: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false
     },
     patronymic: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    geolocation: {
+        type: DataTypes.STRING,
         allowNull: false
     },
     birthday: {
-        type: Sequelize.DATEONLY,
+        type: DataTypes.DATEONLY,
         allowNull: false,
         validate: {
-            isAfter: "1900-01-01"
+            isAfter: {
+                args: "1900-01-01",
+                msg: "Дата рождения не может быть ранее 1900-01-01"
+            }
         }
+    },
+    phone: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     email: {
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: {
+            args: true,
+            msg: "Пользователь с таким email уже существует!"
+        },
         validate: {
-            isEmail: true
+            isEmail: {
+                args: true,
+                msg: "Не правильный формат электронной почты!"
+            }
         }
-    },
-    timestamp: true
+    }
+}, {
+    sequelize,
+    modelName: "User"
 });
+
+module.exports = { User };

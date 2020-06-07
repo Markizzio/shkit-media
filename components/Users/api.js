@@ -12,9 +12,6 @@ module.exports = function (fastify, opts, done) {
                 },
                 password: {
                     type: "string"
-                },
-                fingerprint: {
-                    type: 'string'
                 }
             },
             response: {
@@ -31,21 +28,46 @@ module.exports = function (fastify, opts, done) {
     });
 
     fastify.route({
-        method: 'GET',
-        url: '/user/test',
+        method: 'POST',
+        url: '/user/register',
         schema: {
+            body: {
+                name: {
+                    type: "string"
+                },
+                surname: {
+                    type: "string"
+                },
+                patronymic: {
+                    type: "string"
+                },
+                password: {
+                    type: "string"
+                },
+                geolocation: {
+                    type: "string"
+                },
+                birthday: {
+                    type: "string"
+                },
+                phone: {
+                    type: "string"
+                },
+                email: {
+                    type: "string"
+                }
+            },
             response: {
                 200: {
                     type: 'object',
-                    properties: {
-                        hello: {type: 'string'}
+                    data: {
+                        status: {type: 'string'},
+                        message: {type: 'string'}
                     }
                 }
             }
         },
-        handler: function (request, reply) {
-            reply.send({hello: 'world'})
-        }
+        handler: (request, reply) => controller.register(fastify, request, reply)
     });
 
     done();

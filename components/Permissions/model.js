@@ -1,17 +1,17 @@
 const sequelize = require('../../db');
 const {Model, DataTypes} = require('sequelize');
 
-class Post extends Model {
+class Permission extends Model{
 }
 
-Post.init({
+Permission.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false
     },
-    title: {
+    name: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -19,13 +19,9 @@ Post.init({
         type: DataTypes.STRING(600),
         allowNull: false
     },
-    content: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    }
 }, {
     sequelize,
-    modelName: "Post"
+    modelName: "Permission"
 });
 
-module.exports = {Post};
+module.exports = { Permission };
