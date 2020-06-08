@@ -18,20 +18,24 @@ async function auth(fastify, request, reply) {
         token: "denied"
     };
 
-    const user = await User.findOne({
-        where: {
-            email: request.body.email
-        }
-    });
-
-    const compare = bcrypt.compareSync(request.body.password, user.password);
-
-    if (compare) {
-        result.status = "OK";
-        result.token = fastify.jwt.sign({
-            UserId: user.id,
-            RoleId: user.RoleId
+    try {
+        const user = await User.findOne({
+            where: {
+                email: request.body.email
+            }
         });
+    
+        const compare = bcrypt.compareSync(request.body.password, user.password);
+    
+        if (compare) {
+            result.status = "OK";
+            result.token = fastify.jwt.sign({
+                UserId: user.id,
+                RoleId: user.RoleId
+            });
+        }
+    } catch (error) {
+        fastify.rollbar.error(error);
     }
 
     return JSON.stringify(result);

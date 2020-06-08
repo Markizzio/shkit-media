@@ -46,7 +46,10 @@ async function get(fastify, request, reply) {
     try {
 
         const post = await Post.findOne({
-            id: request.params.id
+            where: {
+                id: request.params.id
+            }
+            
         });
 
         if (post) {
@@ -87,4 +90,30 @@ async function get(fastify, request, reply) {
 
 }
 
-module.exports = { create, get };
+async function get_all(fastify, request, reply) {
+
+    let result;
+
+    try {
+
+        const posts = await Post.findAll();
+
+        if (posts) {
+            result = posts;
+        }
+
+    } catch (error) {
+        fastify.rollbar.error(error);
+
+        result = {
+            status: "ERROR",
+            message: "Not found",
+            code: 404
+        };
+    }
+
+    return JSON.stringify(result);
+
+}
+
+module.exports = { create, get, get_all };

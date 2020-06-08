@@ -42,5 +42,18 @@ module.exports = function (fastify, opts, done) {
         handler: (request, reply) => controller.get(fastify, request, reply)
     });
 
+    fastify.route({
+        method: 'GET',
+        url: '/posts',
+        schema: {
+            response: {
+                200: {
+                    type: 'object'
+                } 
+            }
+        },
+        handler: (request, reply) => controller.get_all(fastify, request, reply)
+    });
+
     done();
 };

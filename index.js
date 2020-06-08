@@ -10,6 +10,9 @@ fastify.register(require('./plugins/rollbar'), {
     captureUncaught: process.env.RB_CAPTURE_UNCAUGHT,
     captureUnhandledRejections: process.env.RB_CAPTURE_UNHANDLED_REJECTIONS
 });
+fastify.register(require('fastify-cors'), {
+    origin: "*"
+});
 fastify.register(require('./plugins/jwt'));
 fastify.register(require('fastify-helmet'));
 fastify.register(require('./components/index'));
