@@ -3,6 +3,15 @@ const controller = require('./controller');
 module.exports = function (fastify, opts, done) {
 
     fastify.route({
+        method: 'GET',
+        url: '/user/test',
+        handler: (request, reply) => {
+            console.log(request)
+            reply.send(request.raw.originalUrl);
+        }
+    });
+
+    fastify.route({
         method: 'POST',
         url: '/user/auth',
         schema: {
@@ -16,11 +25,7 @@ module.exports = function (fastify, opts, done) {
             },
             response: {
                 200: {
-                    type: 'object',
-                    data: {
-                        status: {type: 'string'},
-                        token: {type: 'string'}
-                    }
+                    type: 'object'
                 }
             }
         },
@@ -68,6 +73,34 @@ module.exports = function (fastify, opts, done) {
             }
         },
         handler: (request, reply) => controller.register(fastify, request, reply)
+    });
+
+    fastify.route({
+        method: "GET",
+        url: "/user/:id",
+        preHandler: [fastify.authenticate],
+        schema: {
+            params: {
+                id: {type: "integer"}
+            },
+            response: {
+                200: {
+                    type: "object",
+                    data: {
+                        user: {type: "object"},
+                        status: {type: "string"}
+                    }
+                },
+                404: {
+                    type: "object",
+                    data: {
+                        status: {type: "string"},
+                        message: {type: "string"}
+                    }
+                }
+            }
+        },
+        handler: (request, reply) => controller.get(fastify, request, reply)
     });
 
     done();

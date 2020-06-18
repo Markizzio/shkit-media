@@ -57,6 +57,23 @@ sequelize.sync({force:true}).then(()=>{
 }).catch(err=>console.log(err));
 
 module.exports = fp(async function(fastify, opts) {
+
+    fastify.decorate("isPermitted", async (request, reply) => {
+        let is_permitted = false;
+
+        const role = Role.findOne({
+            where: {
+                id: request.user.RoleId
+            }
+        });
+
+        if (request.user.RoleId === role.id) {
+            is_admin = true;
+        }
+
+        return is_admin;
+    });
+
     const components = fs.readdirSync(path.join(__dirname));
     components.forEach(component => {
         if (fs.lstatSync(path.join(__dirname, `${component}`)).isDirectory()) {
@@ -66,4 +83,6 @@ module.exports = fp(async function(fastify, opts) {
             }
         }
     });
+
+
 });

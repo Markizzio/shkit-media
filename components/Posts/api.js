@@ -27,6 +27,31 @@ module.exports = function (fastify, opts, done) {
     });
 
     fastify.route({
+        method: 'POST',
+        url: '/post/edit/',
+        preHandler: [fastify.authenticate, fastify.isCurrentUser],
+        schema: {
+            body: {
+                id: "number",
+                title: "string" ,
+                description: "string",
+                content: "string",
+                categories: "array"
+            },
+            response: {
+                200: {
+                    type: 'object',
+                    data: {
+                        status: { type: 'string' },
+                        message: { type: 'string' }
+                    }
+                }
+            }
+        },
+        handler: (request, reply) => controller.create(fastify, request, reply)
+    });
+
+    fastify.route({
         method: 'GET',
         url: '/post/:id',
         schema: {
@@ -54,6 +79,7 @@ module.exports = function (fastify, opts, done) {
         },
         handler: (request, reply) => controller.get_all(fastify, request, reply)
     });
+
 
     done();
 };

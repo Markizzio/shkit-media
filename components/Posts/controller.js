@@ -47,7 +47,8 @@ async function get(fastify, request, reply) {
 
         const post = await Post.findOne({
             where: {
-                id: request.params.id
+                id: request.params.id,
+                admission: true
             }
             
         });
@@ -97,6 +98,36 @@ async function get_all(fastify, request, reply) {
     try {
 
         const posts = await Post.findAll();
+
+        if (posts) {
+            result = posts;
+        }
+
+    } catch (error) {
+        fastify.rollbar.error(error);
+
+        result = {
+            status: "ERROR",
+            message: "Not found",
+            code: 404
+        };
+    }
+
+    return JSON.stringify(result);
+
+}
+
+async function get_posts_for_user(fastify, request, reply) {
+
+    let result;
+
+    try {
+
+        const posts = await Post.findAll({
+            where: {
+                UserId: request.body.UserId
+            }
+        });
 
         if (posts) {
             result = posts;

@@ -14,8 +14,7 @@ const { Role } = require('../Roles/model');
 async function auth(fastify, request, reply) {
 
     const result = {
-        status: "ERROR",
-        token: "denied"
+        status: "ERROR"
     };
 
     try {
@@ -24,16 +23,22 @@ async function auth(fastify, request, reply) {
                 email: request.body.email
             }
         });
-    
-        const compare = bcrypt.compareSync(request.body.password, user.password);
-    
-        if (compare) {
-            result.status = "OK";
-            result.token = fastify.jwt.sign({
-                UserId: user.id,
-                RoleId: user.RoleId
-            });
+
+        if (user) {
+            const compare = bcrypt.compareSync(request.body.password, user.password);
+
+            if (compare) {
+                result.status = "OK";
+                result.token = fastify.jwt.sign({
+                    UserId: user.id,
+                    RoleId: user.RoleId
+                });
+            }
+        } else {
+            result.message = "Неверная почта или пароль!";
         }
+    
+
     } catch (error) {
         fastify.rollbar.error(error);
     }
@@ -48,18 +53,15 @@ async function register(fastify, request, reply) {
         status: "ERROR",
         message: "Возникла ошибка!"
     };
-    let user;
-
-    const role = await Role.findOne({
-        where: {
-            name: "user"
-        }
-    });
-
-    console.log(role.id)
 
     try {
-        user = await User.create({
+        const role = await Role.findOne({
+            where: {
+                name: "user"
+            }
+        });
+
+        const user = await User.create({
             name: request.body.name,
             surname: request.body.surname,
             patronymic: request.body.patronymic,
@@ -84,4 +86,86 @@ async function register(fastify, request, reply) {
 
 }
 
-module.exports = { auth, register };
+async function get(fastify, request, reply) {
+
+    const result = {
+        status: "ERROR"
+    };
+
+    try {
+
+        const user = await User.findOne({
+            where: {
+                id: request.params.id
+            },
+            attributes: ['id', 'name', 'surname', 'patronymic', 'email', 'phone', 'birthday']
+        });
+
+        if (user) {
+            result.status = "OK";
+            result.user = user;
+        } else {
+            reply.code(404);
+            return {
+                status: "ERROR",
+                message: "Not found"
+            };
+        }
+
+    } catch (error) {
+        result.message = error.errors[0].message;
+    }
+
+    return JSON.stringify(result);
+
+}
+
+/**
+ * TODO: редактирование жанных пользователя
+ * @param fastify
+ * @param request
+ * @param reply
+ * @returns {Promise<string|{message: string, status: string}>}
+ */
+
+async function edit(fastify, request, reply) {
+
+    const result = {
+        status: "ERROR"
+    };
+
+    if (request.user.UserId === request.body.id) {
+        try {
+
+            const user = await User.findOne({
+                where: {
+                    id: request.body.id
+                },
+                attributes: ['name', 'surname', 'patronymic', 'email', 'phone', 'birthday']
+            });
+
+
+
+            if (user) {
+
+
+            } else {
+                reply.code(404);
+                return {
+                    status: "ERROR",
+                    message: "Not found"
+                };
+            }
+
+        } catch (error) {
+            result.message = error.errors[0].message;
+        }
+    }
+
+
+
+    return JSON.stringify(result);
+
+}
+
+module.exports = { auth, register, get };
