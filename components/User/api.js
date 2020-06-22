@@ -2,14 +2,14 @@ const controller = require('./controller');
 
 module.exports = function (fastify, opts, done) {
 
-    fastify.route({
-        method: 'GET',
-        url: '/user/test',
-        handler: (request, reply) => {
-            console.log(request)
-            reply.send(request.raw.originalUrl);
-        }
-    });
+    // fastify.route({
+    //     method: 'GET',
+    //     url: '/user/test',
+    //     handler: (request, reply) => {
+    //         console.log(request)
+    //         reply.send(request.raw.originalUrl);
+    //     }
+    // });
 
     fastify.route({
         method: 'POST',
@@ -101,6 +101,36 @@ module.exports = function (fastify, opts, done) {
             }
         },
         handler: (request, reply) => controller.get(fastify, request, reply)
+    });
+
+    fastify.route({
+        method: "POST",
+        url: "/user/edit",
+        preHandler: [fastify.authenticate],
+        schema: {
+            body: {
+                id: {type: "integer"},
+                name: {type: "string"},
+                surname: {type: "string"},
+                patronymic: {type: "string"},
+                email: {type: "string"},
+                phone: {type: "phone"},
+                birthday: {type: "string"},
+            },
+            response: {
+                200: {
+                    type: "object"
+                },
+                404: {
+                    type: "object",
+                    data: {
+                        status: {type: "string"},
+                        message: {type: "string"}
+                    }
+                }
+            }
+        },
+        handler: (request, reply) => controller.edit(fastify, request, reply)
     });
 
     done();

@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 const fs = require('fs');
 const { User } = require('./model');
-const { Role } = require('../Roles/model');
+const { Role } = require('../Role/model');
 
 /**
  * Метод авторизации пользователя и выдачи ему токена
@@ -147,8 +147,15 @@ async function edit(fastify, request, reply) {
 
 
             if (user) {
+                user.name = request.body.name;
+                user.surname = request.body.surname;
+                user.patronymic = request.body.patronymic;
+                user.email = request.body.email;
+                user.phone = request.body.phone;
+                user.birthday = request.body.birthday;
 
-
+                result.status = true;
+                result.message = "Изменения успешно внесены"
             } else {
                 reply.code(404);
                 return {
@@ -168,4 +175,4 @@ async function edit(fastify, request, reply) {
 
 }
 
-module.exports = { auth, register, get };
+module.exports = { auth, register, get, edit };

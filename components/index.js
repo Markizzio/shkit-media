@@ -4,33 +4,42 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const sequelize = require('../db');
 
-const { User } = require('./Users/model');
-const { Role } = require('./Roles/model');
-const { Attachment } = require('./Attachments/model');
-const { AttachmentType } = require('./AttachmentTypes/model');
-const { Category } = require('./Categories/model');
-const { Post } = require('./Posts/model');
-const { PostCategories } = require('./PostCategories/model');
-const { Permission } = require('./Permissions/model');
-const { Like } = require('./Likes/model');
-const { RolePermissions } = require('./RolePermissions/model');
+const { User } = require('./User/model');
+const { Role } = require('./Role/model');
+const { Attachment } = require('./Attachment/model');
+const { AttachmentType } = require('./AttachmentType/model');
+const { Category } = require('./Category/model');
+const { Post } = require('./Post/model');
+const { PostCategories } = require('./PostCategory/model');
+const { PostType } = require('./PostType/model');
+const { Permission } = require('./Permission/model');
+const { School } = require('./School/model');
+const { SchoolInfo } = require('./SchoolInfo/model');
+const { Like } = require('./Like/model');
+const { RolePermissions } = require('./RolePermission/model');
 
 User.hasMany(Post);
 User.belongsTo(Role);
-Post.belongsToMany(Category, {
-    through: PostCategories
-});
 Category.belongsToMany(Post, {
     through: PostCategories
 });
+Post.belongsToMany(Category, {
+    through: PostCategories
+});
+Post.hasMany(Attachment);
+Post.belongsTo(PostType);
 Role.belongsToMany(Permission, {through: RolePermissions});
 Permission.belongsToMany(Role, {through: RolePermissions});
-Post.hasMany(Attachment);
 Like.belongsTo(User);
 Like.belongsTo(Post);
 Attachment.belongsTo(AttachmentType);
+School.hasOne(SchoolInfo);
+SchoolInfo.belongsTo(User, {
+    as: "director"
+});
+User.belongsTo(School);
 
-sequelize.sync({force:true}).then(()=>{
+sequelize.sync({force:process.env.DB_FORCE || false}).then(()=>{
     console.log("Tables have been created");
 
     Role.create({
@@ -58,12 +67,12 @@ sequelize.sync({force:true}).then(()=>{
 
 module.exports = fp(async function(fastify, opts) {
 
-    fastify.decorate("isPermitted", async (request, reply) => {
-        let is_permitted = false;
+    fastify.decorate("isAdmin", async (request, reply) => {
+        let is_admin = false;
 
         const role = Role.findOne({
             where: {
-                id: request.user.RoleId
+                name: "admin"
             }
         });
 

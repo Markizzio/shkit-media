@@ -29,7 +29,7 @@ module.exports = function (fastify, opts, done) {
     fastify.route({
         method: 'POST',
         url: '/post/edit/',
-        preHandler: [fastify.authenticate, fastify.isCurrentUser],
+        preHandler: [fastify.authenticate],
         schema: {
             body: {
                 id: "number",
@@ -48,12 +48,13 @@ module.exports = function (fastify, opts, done) {
                 }
             }
         },
-        handler: (request, reply) => controller.create(fastify, request, reply)
+        handler: (request, reply) => controller(fastify, request, reply)
     });
 
     fastify.route({
         method: 'GET',
         url: '/post/:id',
+        preHandler: [fastify.authenticate],
         schema: {
             params: {
                 id: { type: "integer" }
@@ -78,6 +79,39 @@ module.exports = function (fastify, opts, done) {
             }
         },
         handler: (request, reply) => controller.get_all(fastify, request, reply)
+    });
+
+    fastify.route({
+        method: 'GET',
+        url: '/posts/user',
+        preHandler: [fastify.authenticate],
+        schema: {
+            response: {
+                200: {
+                    type: 'object'
+                }
+            }
+        },
+        handler: (request, reply) => controller.get_posts_for_user(fastify, request, reply)
+    });
+
+    fastify.route({
+        method: 'GET',
+        url: '/post/admission',
+        preHandler: [fastify.authenticate, fastify.isAdmin],
+        schema: {
+            body: {
+                id: { type: "number" },
+                admission: { type: "boolean" },
+                admission_comment: { type: "string" }
+            },
+            response: {
+                200: {
+                    type: 'object'
+                }
+            }
+        },
+        handler: (request, reply) => controller.admission(fastify, request, reply)
     });
 
 

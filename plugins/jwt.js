@@ -27,13 +27,4 @@ module.exports = fp(async function(fastify, opts) {
         }
     });
 
-    fastify.decorate("isCurrentUser", async (request, reply) => {
-        let current = false;
-
-        if (request.user.UserId === request.body.UserId) {
-            current = true;
-        }
-
-        return current;
-    });
 });
